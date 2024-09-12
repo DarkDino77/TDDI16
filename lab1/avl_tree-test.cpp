@@ -24,9 +24,82 @@ using namespace std;
 int main() {
     AVL_Tree<int>  avl_tree;
 
-    for (int i = 1; i <= 11; i++)
-        avl_tree.insert(i);
+    // for (int i = 1; i <= 11; i++)
+    //     avl_tree.insert(i);
+    // //test 1 remove 10
+    //  avl_tree.insert(6);
 
+    //  avl_tree.insert(4);
+    //  avl_tree.insert(10);
+
+    //  avl_tree.insert(5);
+    //test 2 remove 4
+    //  avl_tree.insert(6);
+
+    //  avl_tree.insert(4);
+    //  avl_tree.insert(10);
+
+    //  avl_tree.insert(15);
+    // test 3 remove 9
+
+    //  avl_tree.insert(9);
+
+    //  avl_tree.insert(4);
+    //  avl_tree.insert(11);
+
+    //  avl_tree.insert(2);
+    //  avl_tree.insert(6);
+    //  avl_tree.insert(10);
+    //  avl_tree.insert(12);
+
+    //  avl_tree.insert(1);
+    //  avl_tree.insert(3);
+    //  avl_tree.insert(5);
+    //  avl_tree.insert(7);
+    //  avl_tree.insert(13);
+
+    //  avl_tree.insert(8);
+    // test mega remove 32
+
+     avl_tree.insert(21);
+
+     avl_tree.insert(13);
+     avl_tree.insert(29);
+
+     avl_tree.insert(8);
+     avl_tree.insert(18);
+     avl_tree.insert(26);
+     avl_tree.insert(32);
+
+     avl_tree.insert(5);
+     avl_tree.insert(11);
+     avl_tree.insert(16);
+     avl_tree.insert(20);
+     avl_tree.insert(24);
+     avl_tree.insert(28);
+     avl_tree.insert(31);
+     avl_tree.insert(33);
+
+     avl_tree.insert(3);
+     avl_tree.insert(7);
+     avl_tree.insert(10);
+     avl_tree.insert(12);
+     avl_tree.insert(15);
+     avl_tree.insert(17);
+     avl_tree.insert(19);
+     avl_tree.insert(23);
+     avl_tree.insert(25);
+     avl_tree.insert(27);
+     avl_tree.insert(30);
+
+     avl_tree.insert(2);
+     avl_tree.insert(4);
+     avl_tree.insert(6);
+     avl_tree.insert(9);
+     avl_tree.insert(14);
+     avl_tree.insert(22);
+
+     avl_tree.insert(1);
     try {
         cout << "AVL-träd efter insättning av 1, 2,..., 11:\n\n";
         avl_tree.print_tree(cout);
