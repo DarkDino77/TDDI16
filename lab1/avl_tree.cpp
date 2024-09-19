@@ -188,17 +188,9 @@ void AVL_Tree_Node<Comparable>::remove(const Comparable &x, Node_Pointer &t) {
         return;  // Här kan ett undantag genereras i stället ...
     }
 
-  
-    // cout << t->element << endl;
     if (x < t->element) {
-        // cout << "hello2" << endl;
         remove(x, t->left);
-        //   cout << "4" << endl;
         calculate_height(t);
-        // cout << "5" << endl;
-        // cout << node_height(t->right) << endl;
-        //  cout << node_height(t->left)<< endl;
-        //  cout << (t->right->element < x) << endl;
 
         if (node_height(t->right) - node_height(t->left) == 2)
             if (node_height(t->right->right) > node_height(t->right->left))
@@ -210,8 +202,8 @@ void AVL_Tree_Node<Comparable>::remove(const Comparable &x, Node_Pointer &t) {
     } else if (x > t->element) {
         
         remove(x, t->right);
-      
         calculate_height(t);
+        
         if (node_height(t->left) - node_height(t->right) == 2)
             if (node_height(t->left->right) < node_height(t->left->left))
                 single_rotate_with_left_child(t);
@@ -219,39 +211,28 @@ void AVL_Tree_Node<Comparable>::remove(const Comparable &x, Node_Pointer &t) {
                 double_rotate_with_left_child(t);
         else
             calculate_height(t);
-
     } else {
         // Sökt värde finns i noden t
-        Node_Pointer  tmp;
+        Node_Pointer tmp;
  
         if (t->left != nullptr && t->right != nullptr) {
             // Noden har två barn och ersätts med inorder efterföljare
             
             tmp = find_min(t->right);
             t->element = tmp->element;
+
             remove(t->element, t->right);
-            cout << "1" << endl;
             calculate_height(t);
-            cout << "2" << endl;
-            cout << node_height(t->right) << endl;
-             cout << node_height(t->left)<< endl;
-             cout << x << endl;
-             cout << t->left->element << endl;
-             cout << (x < t->left->element) << endl;
 
             if (node_height(t->left) - node_height(t->right) == 2)
-                if (node_height(t->left->right) < node_height(t->left->left)){
+                if (node_height(t->left->right) < node_height(t->left->left))
                     single_rotate_with_left_child(t);
-                    }
                 else
-
                     double_rotate_with_left_child(t);
             else
                 calculate_height(t);
-
         } else {
             // Noden har inget eller ett barn
-            // cout << "2" << endl;
             tmp = t;
 
             if (t->left == nullptr)
@@ -260,13 +241,8 @@ void AVL_Tree_Node<Comparable>::remove(const Comparable &x, Node_Pointer &t) {
                 t = t->left;
 
             delete tmp;
-            // cout << "3" << endl;
         }
     }
-
-
- 
-
 }
 
 /**
