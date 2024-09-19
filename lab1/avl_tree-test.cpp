@@ -7,6 +7,8 @@
 // https://developercommunity.visualstudio.com/content/problem/93889/error-c2872-byte-ambiguous-symbol.html
 #ifdef _WIN32
 #include <Windows.h>
+#include <vector> 
+
 struct Setup {
     Setup() {
         SetConsoleOutputCP(65001);
@@ -23,7 +25,16 @@ using namespace std;
 
 int main() {
     AVL_Tree<int>  avl_tree;
+    // vector<int> avl_1({9,4,11,2,6,10,12,1,3,5,7,13,8});
+    // vector<int> avl_2({6,15,4,10});
+    // vector<int> avl_3({44,20,56,10,35,50,40});
+    // vector<int> avl_4({44,20,60,30,50,70,99});
+    // vector<int> avl_5({44,20,60,30,50,70,45});
+    // vector<int> avl_6({44,20,56,10,35,50,1,40});
 
+    // for (int element : avl_1){
+    //     avl_tree.insert(element);
+    // }
     // for (int i = 1; i <= 11; i++)
     //     avl_tree.insert(i);
     // //test 1 remove 10
@@ -100,6 +111,7 @@ int main() {
      avl_tree.insert(22);
 
      avl_tree.insert(1);
+     
     try {
         cout << "AVL-träd efter insättning av 1, 2,..., 11:\n\n";
         avl_tree.print_tree(cout);

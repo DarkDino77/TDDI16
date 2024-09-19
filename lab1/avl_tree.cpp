@@ -193,7 +193,7 @@ void AVL_Tree_Node<Comparable>::remove(const Comparable &x, Node_Pointer &t) {
         calculate_height(t);
 
         if (node_height(t->right) - node_height(t->left) == 2)
-            if (node_height(t->right->right) > node_height(t->right->left))
+            if (node_height(t->right->right) >= node_height(t->right->left))
                 single_rotate_with_right_child(t);
             else
                 double_rotate_with_right_child(t);
@@ -205,7 +205,7 @@ void AVL_Tree_Node<Comparable>::remove(const Comparable &x, Node_Pointer &t) {
         calculate_height(t);
         
         if (node_height(t->left) - node_height(t->right) == 2)
-            if (node_height(t->left->right) < node_height(t->left->left))
+            if (node_height(t->left->right) <= node_height(t->left->left))
                 single_rotate_with_left_child(t);
             else
                 double_rotate_with_left_child(t);
@@ -225,7 +225,7 @@ void AVL_Tree_Node<Comparable>::remove(const Comparable &x, Node_Pointer &t) {
             calculate_height(t);
 
             if (node_height(t->left) - node_height(t->right) == 2)
-                if (node_height(t->left->right) < node_height(t->left->left))
+                if (node_height(t->left->right) <= node_height(t->left->left))
                     single_rotate_with_left_child(t);
                 else
                     double_rotate_with_left_child(t);
