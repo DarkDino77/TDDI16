@@ -52,7 +52,7 @@ namespace std {
     struct hash<Image_Summary> {
         size_t operator()(const Image_Summary &img) const
         {
-            // TODO: behöver man hantera om summary_size > 8?
+            // TODO: behöver man hantera om storleken överskrider antalet bits i size_t?
             size_t horizontal = 0;
             size_t vertical = 0;
 
@@ -76,33 +76,28 @@ Image_Summary compute_summary(const Image &image) {
     const size_t summary_size = 8;
     Image_Summary result;
 
-    Image shrinked_image = image.shrink(summary_size + 1, summary_size + 1);
+    const Image shrinked_image = image.shrink(summary_size + 1, summary_size + 1);
+
+    result.horizontal.reserve((summary_size + 1) * summary_size);
+    result.vertical.reserve((summary_size + 1) * summary_size);
 
     for (size_t y = 0; y <= summary_size; y++) {
         for (size_t x = 0; x < summary_size; x++) {
             const Pixel &left = shrinked_image.pixel(x, y);
             const Pixel &right = shrinked_image.pixel(x + 1, y);
 
-            bool value = false; 
-
-            if (left.brightness() < right.brightness()) {
-                value = true;
-            }
+            const bool value = left.brightness() < right.brightness();
 
             result.horizontal.push_back(value);            
         }
-    }
+    } 
 
     for (size_t x = 0; x <= summary_size; x++) {
         for (size_t y = 0; y < summary_size; y++) {
             const Pixel &upper = shrinked_image.pixel(x, y);
             const Pixel &lower = shrinked_image.pixel(x, y + 1);
 
-            bool value = false;
-
-            if (upper.brightness() < lower.brightness()) {
-                value = true;
-            }
+            const bool value = upper.brightness() < lower.brightness();
 
             result.vertical.push_back(value);
         }
@@ -110,8 +105,6 @@ Image_Summary compute_summary(const Image &image) {
 
     return result;
 }
-
-const size_t image_size = 32;
 
 int main(int argc, const char *argv[]) {
     WindowPtr window = Window::create(argc, argv);
@@ -132,18 +125,11 @@ int main(int argc, const char *argv[]) {
 
     auto begin = std::chrono::high_resolution_clock::now();
 
-    /**
-     * TODO:
-     * - For each file:
-     *   - Load the file
-     *   - Compute its summary
-     */
-
     std::unordered_map<Image_Summary, std::vector<std::string>> image_map;
 
     for (const auto &file : files) {
         const Image image = load_image(file);
-        Image_Summary summary = compute_summary(image);
+        const Image_Summary summary = compute_summary(image);
 
         if (image_map.count(summary)) {
             image_map[summary].push_back(file);
@@ -157,24 +143,11 @@ int main(int argc, const char *argv[]) {
          << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()
          << " milliseconds." << endl;
 
-    /**
-     * TODO:
-     * - Display sets of files with equal summaries
-     */
-
-    std::vector<std::string> duplicates;
-
-    for (auto &[k, v] : image_map) {
-        if (v.size() > 1) {
-            for (const auto &d : v) {
-                duplicates.push_back(d);
-            }
-            //std::copy(duplicates.cbegin(), duplicates.cend(), std::back_inserter(v));
+    for (const auto &[summary, files] : image_map) {
+        if (files.size() > 1) {
+            window->report_match(files);
         }
     }
-
-    window->report_match(duplicates);
-
 
     return 0;
 }
