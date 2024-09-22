@@ -3,7 +3,7 @@
 #
 
 CXX      := g++ -std=c++17 -pipe
-OPTIMIZE := -O0
+OPTIMIZE := -O3
 FLAGS    := $(OPTIMIZE) -Wall -Wextra -ggdb
 LDFLAGS  := -pthread -lsfml-graphics -lsfml-window -lsfml-system
 EXEC     := slow fast
