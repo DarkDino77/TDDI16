@@ -81,14 +81,15 @@ Image_Summary compute_summary(const Image &image) {
     result.horizontal.reserve((summary_size + 1) * summary_size);
     result.vertical.reserve((summary_size + 1) * summary_size);
 
-    for (size_t y = 0; y <= summary_size; y++) {
+    for (size_t y = 0; y <= summary_size ; y++) {
         for (size_t x = 0; x < summary_size; x++) {
+
             const Pixel &left = shrinked_image.pixel(x, y);
             const Pixel &right = shrinked_image.pixel(x + 1, y);
 
             const bool value = left.brightness() < right.brightness();
+            result.horizontal.push_back(value);         
 
-            result.horizontal.push_back(value);            
         }
     } 
 
@@ -138,16 +139,17 @@ int main(int argc, const char *argv[]) {
         }
     }
 
-    auto end = std::chrono::high_resolution_clock::now();
-    cout << "Total time: "
-         << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()
-         << " milliseconds." << endl;
 
     for (const auto &[summary, files] : image_map) {
         if (files.size() > 1) {
             window->report_match(files);
         }
     }
+
+    auto end = std::chrono::high_resolution_clock::now();
+    cout << "Total time: "
+         << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()
+         << " milliseconds." << endl;
 
     return 0;
 }
