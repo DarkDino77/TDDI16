@@ -43,10 +43,17 @@ exakta jämförelser görs.
   som helt motsvarar vad vi egentligen är ute efter. Vilken eller vilka
   egenskaper behöver "compute_summary" ha för att vi ska kunna lösa problemet i
   labben? Tycker du att den givna funktionen uppfyller dessa egenskaper?
-
-Funktionen behöver hitta bilder som är relativt lika varandra. Den ska inte räkna
-bilder som är alltför olika varandra som dubbletter men inte heller kräva att de
-är nästan identiska för att räkna dem som dubbletter.
+compute_summary behöver räkna ut ett hashvärde som är relativt unikt per bild
+utan att behöva lagra allt för mycket information om varje bild. Det behöver 
+dessutom vara snabb för att nå upp till de krav om körtid som finns i labben.
+Resultatet bör dessutom gå att lagra i en size_t utan att förlora alltför mycket
+information då ett hashvärde av den typen krävs för att kunna lagra något i en
+unordered_map.
+Vi anser att den givna funktionen uppfyller egenskaperna. Vi såg inte att den markerade
+alltför olika bilder som dubbletter. tidskomplexitet var inte heller för hög.
+Ett problem med den var dock att den bara undersökte skillnaden i ljusstyrka mellan två olika
+pixlar vilket gjorde att bilder med väldigt olika ljusstyrkor överlag, men med samma relativa
+ljusstyrkeskillnad mellan pixlar, markerades som dubletter vilket kanske inte är önskvärt. 
 
 - Ser du några problem med metoden för att se om två bilder är lika dana?
   Föreslå en alternativ metod för att hitta bilder som är lika. Vad har
@@ -56,14 +63,19 @@ bilder som är alltför olika varandra som dubbletter men inte heller kräva att
   inte vara snabbare än det som föreslås i labben, men du ska komma på
   åtminstone en fördel med din metod.
 I vår lösning kollar vi bara den relativa ljusstyrkan mellan pixlar. Detta gör att om
-två bilder har väldigt skilda ljusstyrkor kommer de ändå räknas som dubletter av varandra.
-Man skulle istället kunna ha i åtanke den absoluta skillnaden i ljusstyrka mellan bilderna
-ifall man tycker att detta är ett problem.
+två bilder har väldigt skilda ljusstyrkor kommer de ändå räknas som dubletter av varandra
+så länge den relativa ljusstyrkan mellan närliggande pixlar är liknande.
 
 Man skulle kunna lagra den genomsnittliga ljusstyrkan i Image_Summary och göra det till en del av
-hashen, t.ex skulle ljusstyrkan kunna normaliseras till ett värde mellan 0 och 8 och använda de översta
-2 bitsen i hashvärdet för att lagra detta genomsnitt. På så sätt får inte två bilder med väldigt skilda ljusstyrkor
-samma hashvärde. Man bör då även lägga till en jämförelse mellan ljusstyrkor i den överlagrade jämförelseoperatorn
+hashen. Detta skulle kunna ske genom att summera ljusstyrkan i alla pixlar och sedan dividera summan
+med antalet pixlar. För att överföra detta till hash-värdet skulle man sedan kunna normalisera detta
+genomsnitt till ett värde mellan 0 och 7 och lagra detta normaliserade genomsnitt i de översta 4
+bitsen i hashvärdet. Man bör då även lägga till en jämförelse mellan ljusstyrkor i den överlagrade jämförelseoperatorn
 för Image_Summary.
 
-Man kan också jämnföra andra värden en brigthness som till exemple rgb värden
+Skulle man bara ta ljusstyrkan i beaktande under jämförelsen men inte lyckas inkludera det i hashen skulle
+det inte påverka tidskomplexiteten men däremot påverka körtiden. Detta eftersom bilder som inte är dubbletter
+skulle få samma hashvärde och därför hamna i samma bucket. Dessa kollisioner skulle sakta ner körtiden något
+eftersom man skulle behöva hantera kollisionerna vid insättning och lookup.
+
+Man kan också jämnföra andra värden än brigthness som till exempel rgb värden.
