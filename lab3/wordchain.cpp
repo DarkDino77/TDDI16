@@ -102,28 +102,23 @@ vector<string> find_longest(const Dictionary &dict, const string &word)
 
     visited.insert(word);
     to_visit.push({word});
-
+    
     while (!to_visit.empty()) {
-        vector<string> current = to_visit.front();
-        const vector<string> neighbours = find_neigbohrs(dict, current.back(), visited);
+        result = to_visit.front();
+        const vector<string> neighbours = find_neigbohrs(dict, result.back(), visited);
         to_visit.pop();
 
         for (const string &next : neighbours) {
                 visited.insert(next);
-                vector<string> new_path = current;
+                vector<string> new_path = result;
 
                 new_path.push_back(next);
                 to_visit.push(new_path);
         }
-
-        if (to_visit.empty())
-        {
-            std::reverse(current.begin(), current.end());
-            return current;
-        }
     }
     
     
+    std::reverse(result.begin(), result.end());
     return result;
 }
 
