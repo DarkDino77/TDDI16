@@ -99,8 +99,7 @@ vector<string> find_longest(const Dictionary &dict, const string &word)
 
     unordered_set<string> visited;
     queue<vector<string>> to_visit;
-
-    visited.insert(word);
+   visited.insert(word);
     to_visit.push({word});
     
     while (!to_visit.empty()) {
