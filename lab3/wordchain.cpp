@@ -5,6 +5,7 @@
 #include <unordered_set>
 #include <queue>
 #include <algorithm>
+#include <memory>
 
 
 using std::cout;
@@ -21,30 +22,126 @@ using std::vector;
 // typen.
 typedef unordered_set<string> Dictionary;
 
+struct Node {
+    Node(const std::string &w, std::shared_ptr<Node> prev = nullptr)
+        : word{w},
+          previous{prev}
+    {}
+    
+    std::string              word;
+    std::shared_ptr<Node>    previous;
+    std::vector<std::string> neighbours;
+};
+
 /**
  * Hitta den kortaste ordkedjan från 'first' till 'second' givet de ord som finns i
  * 'dict'. Returvärdet är den ordkedja som hittats, första elementet ska vara 'from' och sista
  * 'to'. Om ingen ordkedja hittas kan en tom vector returneras.
  */
-
-vector<string> find_neigbohrs(const Dictionary &dict, const string &word, unordered_set<string> &visited)
+void find_neighbours(const Dictionary &dict, Node &node, const unordered_set<string> &visited)
 {
-    vector<string> neigbohrs;
-    for (size_t i = 0; i < word.size(); i++)
+    node.neighbours.clear();
+    
+    for (size_t i = 0; i < node.word.size(); i++)
     {
         for (char c = 'a'; c <= 'z'; c++)
         {
-            string new_word = word;
+            std::string new_word = node.word;
             new_word[i] = c;
-            if (dict.find(new_word) != dict.end() && new_word != word && !visited.count(new_word))
+            
+            if (dict.count(new_word) && new_word != node.word && !visited.count(new_word))
             {
-                neigbohrs.push_back(new_word);
+                node.neighbours.push_back(new_word);
             }
         }
     }
-    return neigbohrs;
 }
 
+vector<string> find_shortest(const Dictionary &dict, const string &from, const string &to)
+{
+    if (from == to || !dict.count(to))
+    {
+        return {from};
+    }
+    
+    unordered_set<string> visited;
+    queue<std::shared_ptr<Node>> to_visit;
+    
+    visited.insert(from);
+    to_visit.push(std::make_shared<Node>(from));
+
+    std::shared_ptr<Node> current = to_visit.front();
+    
+    while (current->word != to && !to_visit.empty())
+    {
+        current = to_visit.front();
+        to_visit.pop();
+
+        find_neighbours(dict, *current.get(), visited);
+        
+        for(const std::string &neighbour : current->neighbours)
+        {
+            visited.insert(neighbour);
+            to_visit.emplace(std::make_shared<Node>(neighbour, current));
+        }
+    }
+
+    // Destination found, now traverse path backwards
+    vector<string> result;
+    const Node *curr_node = current.get();
+           
+    while (curr_node->word != from) {
+        result.push_back(curr_node->word);
+        curr_node = curr_node->previous.get();
+    }
+
+    result.push_back(from);
+    std::reverse(result.begin(), result.end());
+
+    return result;
+}
+
+/**
+ * Hitta den längsta kortaste ordkedjan som slutar i 'word' i ordlistan 'dict'. Returvärdet är den
+ * ordkedja som hittats. Det sista elementet ska vara 'word'.
+ */
+vector<string> find_longest(const Dictionary &dict, const string &word)
+{
+
+    unordered_set<string> visited;
+    queue<std::shared_ptr<Node>> to_visit;
+
+    visited.insert(word);
+    to_visit.push(std::make_shared<Node>(word));
+    std::shared_ptr<Node> current = to_visit.front();
+
+    while (!to_visit.empty()) {
+        current = to_visit.front();
+        to_visit.pop();
+
+        find_neighbours(dict, *current.get(), visited);
+
+        for (const std::string &neighbour : current->neighbours) {
+            visited.insert(neighbour);
+            to_visit.emplace(std::make_shared<Node>(neighbour, current));
+        }
+    }
+
+    vector<string> result;
+    const Node *current_node = current.get();
+    
+    while (current_node->word != word) {
+        result.push_back(current_node->word);
+        current_node = current_node->previous.get();
+    }
+
+    result.push_back(word);
+    
+    return result;
+}
+
+// GAMLA LÖSNINGEN
+#if 0
 vector<string> find_shortest(const Dictionary &dict, const string &from, const string &to)
 {
     vector<string> result;
@@ -120,6 +217,7 @@ vector<string> find_longest(const Dictionary &dict, const string &word)
     std::reverse(result.begin(), result.end());
     return result;
 }
+#endif
 
 /**
  * Läs in ordlistan och returnera den som en vector av orden. Funktionen läser även bort raden med
