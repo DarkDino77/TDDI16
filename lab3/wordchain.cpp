@@ -30,7 +30,6 @@ struct Node {
     
     std::string              word;
     std::shared_ptr<Node>    previous;
-    std::vector<std::string> neighbours;
 };
 
 /**
@@ -38,23 +37,25 @@ struct Node {
  * 'dict'. Returvärdet är den ordkedja som hittats, första elementet ska vara 'from' och sista
  * 'to'. Om ingen ordkedja hittas kan en tom vector returneras.
  */
-void find_neighbours(const Dictionary &dict, Node &node, const unordered_set<string> &visited)
+vector<string> find_neighbours(const Dictionary &dict, const string &word, const unordered_set<string> &visited)
 {
-    node.neighbours.clear();
+    vector<string> result;
     
-    for (size_t i = 0; i < node.word.size(); i++)
+    for (size_t i = 0; i < word.size(); i++)
     {
         for (char c = 'a'; c <= 'z'; c++)
         {
-            std::string new_word = node.word;
+            string new_word = word;
             new_word[i] = c;
             
-            if (dict.count(new_word) && new_word != node.word && !visited.count(new_word))
+            if (dict.count(new_word) && new_word != word && !visited.count(new_word))
             {
-                node.neighbours.push_back(new_word);
+                result.push_back(new_word);
             }
         }
     }
+
+    return result;
 }
 
 vector<string> find_shortest(const Dictionary &dict, const string &from, const string &to)
@@ -77,9 +78,9 @@ vector<string> find_shortest(const Dictionary &dict, const string &from, const s
         current = to_visit.front();
         to_visit.pop();
 
-        find_neighbours(dict, *current.get(), visited);
+        vector<string> neighbours = find_neighbours(dict, current->word, visited);
         
-        for(const std::string &neighbour : current->neighbours)
+        for(const std::string &neighbour : neighbours)
         {
             visited.insert(neighbour);
             to_visit.emplace(std::make_shared<Node>(neighbour, current));
@@ -119,9 +120,9 @@ vector<string> find_longest(const Dictionary &dict, const string &word)
         current = to_visit.front();
         to_visit.pop();
 
-        find_neighbours(dict, *current.get(), visited);
-
-        for (const std::string &neighbour : current->neighbours) {
+        vector<string> neighbours = find_neighbours(dict, current->word, visited);
+        
+        for (const std::string &neighbour : neighbours) {
             visited.insert(neighbour);
             to_visit.emplace(std::make_shared<Node>(neighbour, current));
         }
