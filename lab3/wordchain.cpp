@@ -87,6 +87,11 @@ vector<string> find_shortest(const Dictionary &dict, const string &from, const s
         }
     }
 
+    // If search terminated before reaching the word, there is no path between the words
+    if (current->word != to) {
+        return {};
+    }
+    
     // Destination found, now traverse path backwards
     vector<string> result;
     const Node *curr_node = current.get();
