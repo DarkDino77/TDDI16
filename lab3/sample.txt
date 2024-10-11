@@ -8,3 +8,7 @@ sten
 aula jama
 aula
 sten aula
+aula sten
+sten
+heja heja
+heja

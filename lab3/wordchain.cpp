@@ -62,7 +62,7 @@ vector<string> find_shortest(const Dictionary &dict, const string &from, const s
 {
     if (from == to || !dict.count(to))
     {
-        return {from};
+        return {};
     }
     
     unordered_set<string> visited;
@@ -143,6 +143,10 @@ vector<string> find_longest(const Dictionary &dict, const string &word)
 
     result.push_back(word);
     
+    if (result.size() == 1) {
+        return {};
+    }
+
     return result;
 }
 
