@@ -16,6 +16,20 @@
 
 using namespace std;
 
+std::vector<Point> get_line_points(const std::vector<Point> &points, const Point origin, const size_t line_start, const size_t point_count)
+{
+    std::vector<Point> line_points{origin};
+
+    for (size_t k = 0; k < point_count; k++)
+    {
+        const Point p = points[line_start - point_count + k + 1];
+
+        line_points.push_back(p);
+    }
+
+    return line_points;
+}
+
 int main(int argc, const char *argv[])
 {
     WindowPtr window = create_window(argc, argv);
@@ -58,21 +72,17 @@ int main(int argc, const char *argv[])
         const Point origin = points[i];
         sort(sorted_points.begin(), sorted_points.end(), PolarSorter{origin});
 
-        assert(sorted_points[0].x == origin.x && sorted_points[0].y == origin.y);
-
-        // for (const auto p : sorted_points)
-        // {
-        //     // std::cout << origin.slopeTo(p) << ", ";
-        // }
-        // std::cout << endl;
-
         size_t point_count{0};
+        Point slopePoint = origin;
         for (size_t j{1}; j < sorted_points.size() - 1; j++)
         {
-            if (origin.sameSlope(sorted_points[j], sorted_points[j + 1], tolerance))
+            if (point_count == 0)
             {
-                // std::cout << origin.slopeTo(sorted_points[j]) << ", " << origin.slopeTo(sorted_points[j + 1]) << '\n';
-                // std::cout << origin.sameSlope(sorted_points[j], sorted_points[j + 1], tolerance) << endl;
+                slopePoint = sorted_points[j];
+            }
+
+            if (origin.sameSlope(slopePoint, sorted_points[j + 1], tolerance))
+            {
                 if (point_count == 0)
                     point_count += 2;
                 else
@@ -82,25 +92,8 @@ int main(int argc, const char *argv[])
             {
                 if (point_count >= 3)
                 {
-                    std::vector<Point> line_points{origin};
-                    // std::cout << point_count <<"\n";
-
-                    for (size_t k = 0; k < point_count; k++)
-                    {
-                        const Point p = sorted_points[j - point_count + k + 1];
-
-                        line_points.push_back(p);
-                    }
-
-                    // for (auto p : line_points)
-                    // {
-                    //     // std::cout << origin.slopeTo(p) << ", ";
-                    // }
-                    // std::cout << '\n';
-                    // std::cout << "Line points: " << line_points.size() << '\n';
-
+                    const std::vector<Point> line_points = get_line_points(sorted_points, origin, j, point_count);
                     window->draw_line(line_points);
-                    // std::this_thread::sleep_for(std::chrono::milliseconds(2000));
                 }
 
                 point_count = 0;
@@ -109,25 +102,9 @@ int main(int argc, const char *argv[])
 
         if (point_count >= 3)
         {
-            std::vector<Point> line_points{origin};
-            // std::cout << point_count <<"\n";
-
-            for (size_t k = 0; k < point_count; k++)
-            {
-                const Point p = sorted_points[sorted_points.size() - 1 - point_count + k + 1];
-
-                line_points.push_back(p);
-            }
-
-            // for (auto p : line_points)
-            // {
-            //     // std::cout << origin.slopeTo(p) << ", ";
-            // }
-            // std::cout << '\n';
-            // std::cout << "Line points: " << line_points.size() << '\n';
+            const std::vector<Point> line_points = get_line_points(sorted_points, origin, points.size() - 1, point_count);
 
             window->draw_line(line_points);
-            // std::this_thread::sleep_for(std::chrono::milliseconds(2000));
         }
     }
 
