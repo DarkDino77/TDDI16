@@ -114,6 +114,11 @@ vector<string> find_shortest(const Dictionary &dict, const string &from, const s
 vector<string> find_longest(const Dictionary &dict, const string &word)
 {
 
+    if (!dict.count(word))
+    {
+        return {};
+    }
+
     unordered_set<string> visited;
     queue<std::shared_ptr<Node>> to_visit;
 
@@ -143,9 +148,6 @@ vector<string> find_longest(const Dictionary &dict, const string &word)
 
     result.push_back(word);
     
-    if (result.size() == 1) {
-        return {};
-    }
 
     return result;
 }
