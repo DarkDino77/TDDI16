@@ -11,9 +11,13 @@ Mönsterigenkänning
   medelfall som är bättre?
 
 brute:
-  O(N³) i medelfall  (i värsta fallet är den O(N⁴) men medelfallet sker tillräckligt ofta)
+  O(N³) i medelfall  (i värsta fallet är den O(N⁴) men medelfallet sker tillräckligt ofta).
+  Medelfallet kommer från att algoritmen undersöker varje kombination av tre punkter från punktmängden.
+  Om tre sådana punkter hittas gås hela mängden av punkter igenom igen, därav O(N⁴) i värsta fall.
 fast:
-  O(N²logN)
+  O(N²logN). Detta beror på att listan gås igenom i linjär tid i den yttre loopen. För varje punkt i listan
+  sorteras den dessutom i O(NlogN) tid. För varje sådan sortering gås sedan listan igenom på nytt i
+  linjär tid, vilket totalt sett resulterar i O(N²logN).
 
 - Fyll i tabellen nedan med riktiga körtider i sekunder när det känns
   vettigt att vänta på hela beräkningen.
