@@ -19,7 +19,7 @@ using namespace std;
 std::vector<Point> get_line_points(const std::vector<Point> &points, const Point origin, const size_t line_start, const size_t point_count)
 {
     std::vector<Point> line_points{origin};
-
+    line_points.reserve(point_count - 1);
     for (size_t k = 0; k < point_count; k++)
     {
         const Point p = points[line_start - point_count + k + 1];

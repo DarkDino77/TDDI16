@@ -2,7 +2,7 @@ Mönsterigenkänning
 ==================
 
 - Ungefärligt antal timmar spenderade på labben (valfritt):
-
+  5 timmar
 
 - Vad är tidskomplexiteten (i ordo-notation) för värstafallstiden av
   programmen som en funktion av N (antal punkter). Ge en kort motivering.
@@ -11,26 +11,26 @@ Mönsterigenkänning
   medelfall som är bättre?
 
 brute:
-
+  O(N³) i medelfall  (i värsta fallet är den O(N⁴) men medelfallet sker tillräckligt ofta)
 fast:
-
+  O(N²logN)
 
 - Fyll i tabellen nedan med riktiga körtider i sekunder när det känns
   vettigt att vänta på hela beräkningen.
   Ge uppskattningar av körtiden (baserat på tidskomplexiteten)
   i övriga fall.
     
-      N       brute       sortering
+      N     brute(s)      sortering(s)
  ----------------------------------
-    150
-    200
-    300
-    400
-    800
-   1600
-   3200
-   6400
-  12800
+    150     0.085         0.009
+    200     0.165         0.019
+    300     0.545         0.051
+    400     1.276         0.090
+    800     10.020        0.338
+   1600     81.950        1.429
+   3200     651.543       6.020
+   6400     ~2606.172     26.108
+  12800     ~10424.688    113.260
 
 
 - Energianvändning
@@ -71,9 +71,10 @@ fast:
   också drar ström i "idle".)
 
 
-Förbrukning av brute på ett år: ? kWh
+Förbrukning av brute på ett år: 519.72 kWh
 
-Förbrukning av sotering på ett år: ? kWh
+Förbrukning av sotering på ett år:  83.30 kWh
 
-Skillnad: ? kWh
+Skillnad:  436.42 kWh
+
 
